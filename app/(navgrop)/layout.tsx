@@ -14,7 +14,7 @@ export default function Layout({children}:{children:ReactNode}){
         if(status=="unauthenticated"){
           router.push("/")
         }
-      },[status])
+      },[status, router])
 
     if(status=='authenticated'){
         return (

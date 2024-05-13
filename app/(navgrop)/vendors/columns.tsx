@@ -3,7 +3,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { z } from "zod";
 import { MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -28,6 +28,46 @@ export const Vendor = z.object({
   country: z.string().optional(),
   zipCode: z.number().optional(),
 });
+
+const ActionCell = ({ vendorId }:any) => {
+  
+
+  const fetchDelete = async () => {
+    console.log("vendor", vendorId)
+    const result = await fetch("http://localhost:3000/api/deletevendor", {
+      method: "DELETE",
+      body: JSON.stringify({ id: vendorId }),
+    });
+    window.location.reload()
+  };
+
+  return (
+    <AlertDialog>
+      <AlertDialogTrigger asChild>
+        <button className="bg-zinc-950 text-white dark:bg-white dark:text-black p-2 rounded-md">
+          Delete
+        </button>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+          <AlertDialogDescription>
+            This action cannot be undone. This will permanently delete the vendor data.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel asChild>
+            <button>Cancel</button>
+          </AlertDialogCancel>
+          <AlertDialogAction asChild>
+            <button onClick={fetchDelete}>Continue</button>
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+};
+
 
 export type Vendor = z.infer<typeof Vendor>;
 
@@ -67,41 +107,7 @@ export const columns: ColumnDef<Vendor>[] = [
   {
     header: "Action",
     id: "actions",
-    cell: ({ row }) => {
-      const vendor: any = row.original;
-      const router = useRouter();
-      
-        const fetchDelete = async ({id}:{id:any}) => {
-          console.log("vendor", vendor)
-          const result = await fetch("http://localhost:3000/api/deletevendor", {
-            method: "DELETE",
-            body: JSON.stringify({ id:vendor.id }),
-          });
-          window.location.reload() 
-        };
-        
-      return(
-        <AlertDialog>
-        <AlertDialogTrigger className="bg-zinc-950 text-white dark:bg-white dark:text-black p-2 rounded-md ">
-          Delete
-        </AlertDialogTrigger>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This action cannot be undone. This will permanently the vendor data
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={()=> fetchDelete(vendor.id) }>
-              Continue
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-      );
-    },
+    cell: ({ row }:any) => <ActionCell vendorId={row.original.id} />,
   },
 ];
 
