@@ -17,7 +17,8 @@ export default function DemoPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:3000/api/vendors");
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+        const response = await fetch(`${apiUrl}/api/vendors`);
         const {result} = await response.json();
         setData(result.vendor);
         console.log(result.vendor)

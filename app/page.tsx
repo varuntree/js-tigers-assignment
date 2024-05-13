@@ -27,7 +27,7 @@ export default function DemoCreateAccount() {
     if(status == "authenticated"){
       router.push("/vendors")
     }
-  },[status])
+  },[status, router])
 
   if (status === "loading" || status === "authenticated") {
     return (

@@ -34,7 +34,8 @@ const ActionCell = ({ vendorId }:any) => {
 
   const fetchDelete = async () => {
     console.log("vendor", vendorId)
-    const result = await fetch("http://localhost:3000/api/deletevendor", {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+    const result = await fetch(`${apiUrl}//api/deletevendor`, {
       method: "DELETE",
       body: JSON.stringify({ id: vendorId }),
     });

@@ -21,6 +21,6 @@ export async function DELETE(req: NextRequest) {
         return NextResponse.json({ message: "Successfully deleted" });
     } catch (e) {
         console.error(e);
-        return NextResponse.json({ message: "Some error in deleting in the db", error: e.message });
+        return NextResponse.json({ message: "Some error in deleting in the db"});
     }
 }

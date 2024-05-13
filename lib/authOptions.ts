@@ -14,8 +14,9 @@ export const authOptions = {
     })
   ],
   callbacks: {
-    async signIn({ user, account, profile }: { user: any; account: Account; profile: Profile }) {
-      if (user.email) {
+    async signIn({ user, account, profile }: any) {
+      // The 'account' parameter can be null, so it should be handled accordingly.
+      if (account && user.email) {
         try {
           let result = await prisma.user.findFirst({
             where: {
@@ -24,33 +25,34 @@ export const authOptions = {
           });
 
           if (!result) {
+            // User does not exist, so create them.
             const createdUser = await prisma.user.create({
               data: {
                 email: user.email
               }
             });
             console.log("New User is created", createdUser);
-            user.id = createdUser.id;  // Attach new user id to the user object
+            user.id = createdUser.id; // Attach new user id to the user object
           } else {
-            user.id = result.id;  // Attach existing user id to the user object
+            user.id = result.id; // Attach existing user id to the user object
           }
         } catch (e) {
           console.error("Error in signIn callback:", e);
-          return false;  // Return false to signal an error
+          return false; // Return false to signal an error
         }
       }
       return true;
     },
 
-    async jwt({ token, user }: { token: JWT; user?: User; account?: Account; profile?: Profile }) {
-      if (user?.email) {
+    async jwt({ token, user, account }: { token: JWT, user?: User, account?: Account | null, profile?: Profile }) {
+      if (user?.id) {
         // If signing in, user object is available
-        token.id = user.id;  // Use the user.id from the signIn step
-      } else if (!token.id) {
+        token.id = user.id; // Use the user.id from the signIn step
+      } else if (!token.id && token.email) {
         // If the token does not have an id, try to retrieve it from the database
         const result = await prisma.user.findFirst({
           where: {
-            email: token.email || ""  // Use email from the token
+            email: token.email // Use email from the token
           }
         });
         token.id = result?.id;
@@ -58,7 +60,6 @@ export const authOptions = {
     
       return token;
     },
-
     async session({ session, token }: { session: any; token: JWT }) {
       session.user.id = token.id;  // Ensure session's user object gets the user id
       return session;
