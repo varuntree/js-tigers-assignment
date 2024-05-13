@@ -1,0 +1,34 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User{
+  id  Int @id @default(autoincrement())
+  email String @unique
+  vendor Vendor[]
+}
+
+model Vendor{
+  id Int @id @default(autoincrement())
+  name String 
+  bank_acc_no BigInt
+  bank_name String
+  address_line1 String?
+  address_line2 String
+  city String?
+  country String?
+  zipcode BigInt?
+  userId Int
+  user User @relation(references: [id], fields: [userId])
+}
