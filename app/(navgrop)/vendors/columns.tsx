@@ -1,23 +1,8 @@
-
 import { ColumnDef } from "@tanstack/react-table";
 import { z } from "zod";
-import { MoreHorizontal } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import dynamic from "next/dynamic";
 
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
+// Define the shape of our data using Zod
 export const Vendor = z.object({
   vendorName: z.string(),
   bankAccNo: z.number(),
@@ -29,68 +14,31 @@ export const Vendor = z.object({
   zipCode: z.number().optional(),
 });
 
-const ActionCell = ({ vendorId }:any) => {
-  
-
-  const fetchDelete = async () => {
-    console.log("vendor", vendorId)
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
-    const result = await fetch(`${apiUrl}//api/deletevendor`, {
-      method: "DELETE",
-      body: JSON.stringify({ id: vendorId }),
-    });
-    window.location.reload()
-  };
-
-  return (
-    <AlertDialog>
-      <AlertDialogTrigger asChild>
-        <button className="bg-zinc-950 text-white dark:bg-white dark:text-black p-2 rounded-md">
-          Delete
-        </button>
-      </AlertDialogTrigger>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-          <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete the vendor data.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel asChild>
-            <button>Cancel</button>
-          </AlertDialogCancel>
-          <AlertDialogAction asChild>
-            <button onClick={fetchDelete}>Continue</button>
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
-  );
-};
-
+const DynamicActionCell = dynamic(() => import('./ActionCell'), {
+  ssr: false,
+});
 
 export type Vendor = z.infer<typeof Vendor>;
 
-export const columns: ColumnDef<Vendor>[] = [
+export const columns:any = [
   {
-    accessorKey: "name",
+    accessorKey: "vendorName",
     header: "Vendor Name",
   },
   {
-    accessorKey: "bank_acc_no",
+    accessorKey: "bankAccNo",
     header: "Bank Account No",
   },
   {
-    accessorKey: "bank_name",
+    accessorKey: "bankName",
     header: "Bank Name",
   },
   {
-    accessorKey: "address_line1",
+    accessorKey: "addLine1",
     header: "Address Line 1",
   },
   {
-    accessorKey: "address_line2",
+    accessorKey: "addLine2",
     header: "Address Line 2",
   },
   {
@@ -102,14 +50,12 @@ export const columns: ColumnDef<Vendor>[] = [
     header: "Country",
   },
   {
-    accessorKey: "zipcode",
+    accessorKey: "zipCode",
     header: "Zip Code",
   },
   {
     header: "Action",
     id: "actions",
-    cell: ({ row }:any) => <ActionCell vendorId={row.original.id} />,
+    cell: ({ row }:any) => <DynamicActionCell vendorId={row.original.id} />,
   },
 ];
-
-

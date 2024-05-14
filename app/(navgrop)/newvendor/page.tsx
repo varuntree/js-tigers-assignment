@@ -1,4 +1,5 @@
 import VendorForm from "./form"
+export const dynamic = 'force-dynamic'
 
 export default function Newvendor(){
     return (
