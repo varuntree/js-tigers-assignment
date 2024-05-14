@@ -22,23 +22,23 @@ export type Vendor = z.infer<typeof Vendor>;
 
 export const columns:any = [
   {
-    accessorKey: "vendorName",
+    accessorKey: "name",
     header: "Vendor Name",
   },
   {
-    accessorKey: "bankAccNo",
+    accessorKey: "bank_acc_no",
     header: "Bank Account No",
   },
   {
-    accessorKey: "bankName",
+    accessorKey: "bank_name",
     header: "Bank Name",
   },
   {
-    accessorKey: "addLine1",
+    accessorKey: "address_line1",
     header: "Address Line 1",
   },
   {
-    accessorKey: "addLine2",
+    accessorKey: "address_line2",
     header: "Address Line 2",
   },
   {
@@ -50,7 +50,7 @@ export const columns:any = [
     header: "Country",
   },
   {
-    accessorKey: "zipCode",
+    accessorKey: "zipcode",
     header: "Zip Code",
   },
   {
