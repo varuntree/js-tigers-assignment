@@ -18,29 +18,29 @@ interface Result {
 export default function DemoPage() {
   const [data, setData] = useState<Vendor[]>([]);
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
 
         
-  //       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
-  //       console.log('API URL:', process.env.NEXT_PUBLIC_API_URL);
-  //       const response = await fetch(`${apiUrl}/api/vendors`, { cache: 'no-store' });
-  //       if (!response.ok) {
-  //         throw new Error(`Error fetching data: ${response.statusText}`);
-  //       }
-  //       const { result } = await response.json();
-  //       setData(result.vendor);
-  //       console.log(result.vendor);
-  //     } catch (error) {
-  //       console.error("Error fetching data:", error);
-  //     }
-  //   };
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+        console.log('API URL:', process.env.NEXT_PUBLIC_API_URL);
+        const response = await fetch(`${apiUrl}/api/vendors`, { cache: 'no-store' });
+        if (!response.ok) {
+          throw new Error(`Error fetching data: ${response.statusText}`);
+        }
+        const { result } = await response.json();
+        setData(result.vendor);
+        console.log(result.vendor);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
 
-  //   if (typeof window !== 'undefined') {
-  //     fetchData();
-  //   }
-  // }, []);
+    if (typeof window !== 'undefined') {
+      fetchData();
+    }
+  }, []);
 
   return (
     <div className="container mx-auto py-10">
